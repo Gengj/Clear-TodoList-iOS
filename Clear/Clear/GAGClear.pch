@@ -1,0 +1,18 @@
+//
+//  GAGClear.pch
+//  Clear
+//
+//  Created by GMax on 2019/1/7.
+//  Copyright © 2019 GAG. All rights reserved.
+//
+
+#ifndef GAGClear_pch
+#define GAGClear_pch
+
+#ifdef __OBJC__
+
+#import "UIView+Frame.h"
+#import "UIView+UIImage.h"
+#endif
+
+#endif 
