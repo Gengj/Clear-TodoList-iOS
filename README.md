@@ -8,7 +8,7 @@ A delightful TodoList App for iOS
 [![Build Status](https://travis-ci.org/ibireme/YYKit.svg?branch=master)](https://travis-ci.org/ibireme/YYKit)
 
 
-Clear-TodoList-iOS is a copy of [iOS TODOList App Clear](https://itunes.apple.com/cn/app/clear-%E4%BB%BB%E5%8A%A1%E5%92%8C%E5%BE%85%E5%8A%9E%E4%BA%8B%E9%A1%B9%E6%B8%85%E5%8D%95/id493136154?mt=8).
+Clear-TodoList-iOS is a copy of [iOS TODOList App Clear](http://www.realmacsoftware.com/clear/).
 
 It had implemented majority of original App :
 * Tap to Edit item
@@ -36,7 +36,7 @@ This library requires `iOS 11.0+` and `Xcode 9.0+`.
 ---
 中文介绍
 ==============
-Clear-TodoList-iOS模仿了[iOS TODOList App Clear](https://itunes.apple.com/cn/app/clear-%E4%BB%BB%E5%8A%A1%E5%92%8C%E5%BE%85%E5%8A%9E%E4%BA%8B%E9%A1%B9%E6%B8%85%E5%8D%95/id493136154?mt=8).
+Clear-TodoList-iOS模仿了[iOS TODOList App Clear](http://www.realmacsoftware.com/clear/).
 
 已经实现了大部分原程序的功能：
 * 点击编辑条目
