@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0C15BB3621E085C900992A43 /* GAGHeaderLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C15BB3521E085C900992A43 /* GAGHeaderLabel.m */; };
 		0C15BB3A21E4656200992A43 /* UIView+UIImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C15BB3921E4656200992A43 /* UIView+UIImage.m */; };
+		0C15BB3D21EB8F0F00992A43 /* UIImage+Rect.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C15BB3C21EB8F0F00992A43 /* UIImage+Rect.m */; };
 		0C8E4ED321CC07BB00259905 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C8E4ED221CC07BB00259905 /* AppDelegate.m */; };
 		0C8E4EDB21CC07BC00259905 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C8E4EDA21CC07BC00259905 /* Assets.xcassets */; };
 		0C8E4EDE21CC07BC00259905 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C8E4EDC21CC07BC00259905 /* LaunchScreen.storyboard */; };
@@ -49,6 +50,8 @@
 		0C15BB3721E3959800992A43 /* GAGClear.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAGClear.pch; sourceTree = "<group>"; };
 		0C15BB3821E4656200992A43 /* UIView+UIImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+UIImage.h"; sourceTree = "<group>"; };
 		0C15BB3921E4656200992A43 /* UIView+UIImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+UIImage.m"; sourceTree = "<group>"; };
+		0C15BB3B21EB8F0F00992A43 /* UIImage+Rect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+Rect.h"; sourceTree = "<group>"; };
+		0C15BB3C21EB8F0F00992A43 /* UIImage+Rect.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Rect.m"; sourceTree = "<group>"; };
 		0C8E4ECE21CC07BB00259905 /* Clear.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Clear.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C8E4ED121CC07BB00259905 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0C8E4ED221CC07BB00259905 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -182,6 +185,8 @@
 				0C8E4F0721CC086F00259905 /* UIView+Frame.m */,
 				0C15BB3821E4656200992A43 /* UIView+UIImage.h */,
 				0C15BB3921E4656200992A43 /* UIView+UIImage.m */,
+				0C15BB3B21EB8F0F00992A43 /* UIImage+Rect.h */,
+				0C15BB3C21EB8F0F00992A43 /* UIImage+Rect.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -357,6 +362,7 @@
 				0C8E4F1D21CC086F00259905 /* GAGItem.m in Sources */,
 				0C8E4F1C21CC086F00259905 /* GAGItems.m in Sources */,
 				0C8E4F1E21CC086F00259905 /* GAGTableViewCell.m in Sources */,
+				0C15BB3D21EB8F0F00992A43 /* UIImage+Rect.m in Sources */,
 				0C8E4EE121CC07BC00259905 /* main.m in Sources */,
 				0C8E4F1B21CC086F00259905 /* GAGFileOperation.m in Sources */,
 				0C15BB3A21E4656200992A43 /* UIView+UIImage.m in Sources */,

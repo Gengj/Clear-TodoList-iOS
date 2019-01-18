@@ -19,8 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol GAGTableViewDelegate <NSObject>
 
 @optional
-- (void)cellDidBeginEditing;
-- (void)cellDidEndEditing;
+- (void)tableViewDidBeginEditing;
+- (void)tableViewDidEndEditing;
 
 @end
 @interface GAGBaseTableView : UITableView

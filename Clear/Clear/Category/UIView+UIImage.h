@@ -21,14 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (UIImageView *)snapshotUIImageView:(UIView *)inputView;
 
 /**
- 截图对应的view成为上下两张imageView
- 
- @param inputView 输入view
- @return NSArray of UIImageViews
- */
-//+ (NSArray<UIImageView *> *)snapshotUIImageViews:(UIView *)inputView;
-
-/**
  截图对应的view
  
  @param inputView 输入view

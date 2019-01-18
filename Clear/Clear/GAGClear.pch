@@ -13,6 +13,7 @@
 
 #import "UIView+Frame.h"
 #import "UIView+UIImage.h"
+#import "UIImage+Rect.h"
 #endif
 
 #endif 

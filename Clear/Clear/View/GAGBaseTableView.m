@@ -82,11 +82,12 @@ typedef struct GAGTouchPoint GAGTouchPoint;
 
 //property for pinch to add
 @property (nonatomic, assign) GAGTouchPoint startPoint;
-
+@property (nonatomic, assign) CGFloat pinchOffset;
 @property (nonatomic, strong) NSIndexPath *pinchOneCellIndex;
 @property (nonatomic, strong) NSIndexPath *pinchTwoCellIndex;
-@property (nonatomic, assign) int newCellIndex;
-
+@property (nonatomic, strong) NSIndexPath *addCellIndex;
+@property (nonatomic, strong) UIImageView *cellImageView1;
+@property (nonatomic, strong) UIImageView *cellImageView2;
 @end
 
 @implementation GAGBaseTableView
@@ -153,6 +154,23 @@ typedef struct GAGTouchPoint GAGTouchPoint;
     return _placeholderCell;
 }
 
+- (UIImageView *)cellImageView1 {
+    if (_cellImageView1 == nil) {
+        _cellImageView1 = [[UIImageView alloc]init];
+        _cellImageView1.contentMode = UIViewContentModeCenter;
+        _cellImageView1.layer.anchorPoint = CGPointMake(0.5, 0);
+    }
+    return _cellImageView1;
+}
+
+- (UIImageView *)cellImageView2 {
+    if (_cellImageView2 == nil) {
+        _cellImageView2 = [[UIImageView alloc]init];
+        _cellImageView2.contentMode = UIViewContentModeCenter;
+        _cellImageView2.layer.anchorPoint = CGPointMake(0.5, 1);
+    }
+    return _cellImageView2;
+}
 
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -201,6 +219,7 @@ typedef struct GAGTouchPoint GAGTouchPoint;
     }
     [self log];
 }
+
 #pragma mark - will add new feature
 // 已完成的再滑动变未完成
 - (void)cellShouldCompleted:(GAGItem*)item{
@@ -222,24 +241,43 @@ typedef struct GAGTouchPoint GAGTouchPoint;
 }
 
 - (void)cellDidBeginEditing:(GAGTableViewCell*)cell{
+//       [cell.textField becomeFirstResponder];
+
     cell.gestureRecognizerEnable = NO;
     
     CGFloat selectedCellY = cell.y;
-    for (UIView *view in self.subviews) {
-        if ([view isKindOfClass:[GAGTableViewCell class]]) {
-            [UIView animateWithDuration:0.2 animations:^{
-                view.transform = CGAffineTransformMakeTranslation(0,- selectedCellY);
-                
-                if ([self.tableViewDelegate respondsToSelector:@selector(cellDidBeginEditing)]) {
-                    [self.tableViewDelegate cellDidBeginEditing];
-                }
-            }completion:^(BOOL finished) {
-                [self setCoverViewHidden:NO];
-
-            }];
-        }
+    
+//    for (UIView *view in self.subviews) {
+//        if ([view isKindOfClass:[GAGTableViewCell class]]) {
+            NSLog(@"transform -- %f",cell.y);
+//            [UIView animateWithDuration:0.2 animations:^{
+//                view.transform = CGAffineTransformMakeTranslation(0,- selectedCellY);
+//
+//                if ([self.tableViewDelegate respondsToSelector:@selector(cellDidBeginEditing)]) {
+//                    [self.tableViewDelegate cellDidBeginEditing];
+//                }
+//            }completion:^(BOOL finished) {
+//                [self setCoverViewHidden:NO];
+//
+//            }];
+//        }
+//    }
+    if ([self.tableViewDelegate respondsToSelector:@selector(tableViewDidBeginEditing)]) {
+        [self.tableViewDelegate tableViewDidBeginEditing];
     }
+    [self setCoverViewHidden:NO];
 
+    for (int i = 0; i < self.items.things.count; i++) {
+
+        GAGTableViewCell *subviewscell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        NSLog(@"before move --- %p  %f",subviewscell,subviewscell.y);
+//        subviewscell.transform = CGAffineTransformIdentity;
+
+                        subviewscell.transform = CGAffineTransformMakeTranslation(0,- selectedCellY);
+        NSLog(@"after  move --- %p  %f",subviewscell,subviewscell.y);
+
+        
+    }
 }
 
 - (void)cellDidEndEditing:(GAGTableViewCell*)cell{
@@ -252,8 +290,8 @@ typedef struct GAGTouchPoint GAGTouchPoint;
         if ([view isKindOfClass:[GAGTableViewCell class]]) {
             [UIView animateWithDuration:0.5 animations:^{
                 view.transform = CGAffineTransformIdentity;
-                if ([self.tableViewDelegate respondsToSelector:@selector(cellDidEndEditing)]) {
-                    [self.tableViewDelegate cellDidEndEditing];
+                if ([self.tableViewDelegate respondsToSelector:@selector(tableViewDidEndEditing)]) {
+                    [self.tableViewDelegate tableViewDidEndEditing];
                 }
             }];
         }
@@ -339,9 +377,11 @@ typedef struct GAGTouchPoint GAGTouchPoint;
     if (self.realTableViewOffsetY <= - TableViewCellHeight) {
         //移除占位cell
             [self.placeholderCell removeFromSuperview];
-            //新增一个item
+
+        //新增一个item
             GAGItem *newItem = [[GAGItem alloc]init];
             [self.items addItemAtTop:newItem];
+        
             
             //注意：这里必须想加入一个item再增加一行，否则model和view对应不上
             [self insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationLeft]; //UITableViewRowAnimationBottom效果也不错，也挺好看的
@@ -349,8 +389,8 @@ typedef struct GAGTouchPoint GAGTouchPoint;
             //拿到第一个cell，让他成为响应者。并接着用户编辑事件
             GAGTableViewCell *firstCell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
             [firstCell.textField becomeFirstResponder];
-            [self cellDidBeginEditing:firstCell];
-            
+//            [self cellDidBeginEditing:firstCell];
+        
     }
     
 }
@@ -378,85 +418,78 @@ typedef struct GAGTouchPoint GAGTouchPoint;
     
 }
 
-
 - (void)pinchStarted:(UIPinchGestureRecognizer*)recognizer {
+    NSLog(@"%s",__func__);
+
     self.startPoint = [self getRealTouchPoint:recognizer];
     
+    //捏合开始时，上下手指分别对应的indexPath
     self.pinchOneCellIndex = [self indexPathForRowAtPoint:self.startPoint.upper];
     self.pinchTwoCellIndex = [self indexPathForRowAtPoint:self.startPoint.lower];
-    self.newCellIndex = (int)(0.5 + (self.pinchOneCellIndex.row + self.pinchTwoCellIndex.row) * 0.5);
-    NSLog(@"new index - %d",self.newCellIndex);
+    //四舍五入计算新cell添加的indexPath
+    int index = (int)(0.5 + (self.pinchOneCellIndex.row + self.pinchTwoCellIndex.row) * 0.5);
+    self.addCellIndex = [NSIndexPath indexPathForRow:index inSection:0];
+    NSLog(@"new index - %ld",self.addCellIndex.row);
+    
+    /*
+    //把placeholder添加上来。准备做截图
     [self addSubview:self.placeholderCell];
     [self sendSubviewToBack:self.placeholderCell];
+    //给他设置个frame和标题
+    self.placeholderCell.frame = CGRectMake(0, 50, self.width, TableViewCellHeight);
+    self.placeholderCell.textField.text = @"pull to add items";
+
+    NSLog(@"%@",NSStringFromCGRect(self.placeholderCell.frame));
+*/
+//
+//    GAGItem *newItem = [[GAGItem alloc]init];
+//    [self.items addItemAtIndex:newItem index:self.AddCellIndex.row];
+//
+//    [self insertRowsAtIndexPaths:@[self.AddCellIndex] withRowAnimation:UITableViewRowAnimationNone];
+//    GAGTableViewCell *newCell = [self cellForRowAtIndexPath:self.AddCellIndex];
+//    newCell.textField.text = @"pull to add items";
+    
+
+//
+    [self addSubview:self.cellImageView1];
+    [self sendSubviewToBack:self.cellImageView1];
+    [self addSubview:self.cellImageView2];
+    [self sendSubviewToBack:self.cellImageView2];
+    
+
+    self.cellImageView1.frame = CGRectMake(0, 0, self.width , TableViewCellHeight * 0.5);
+    self.cellImageView2.frame = CGRectMake(0, 0, self.width , TableViewCellHeight * 0.5);
+
+    NSArray *imgs = [self getPlaceholderTopAndBottomImageFromCache];
+    self.cellImageView1.image = [imgs firstObject];
+    self.cellImageView2.image = [imgs lastObject];
+    self.cellImageView1.contentMode = UIViewContentModeScaleAspectFill;
+    self.cellImageView2.contentMode = UIViewContentModeScaleAspectFill;
+    self.cellImageView1.clipsToBounds = YES;
+    self.cellImageView2.clipsToBounds = YES;
+
+    self.cellImageView1.hidden = NO;
+    self.cellImageView2.hidden = NO;
+    
+    NSLog(@"%s",__func__);
 
 }
-- (void)pinchChanged:(UIPinchGestureRecognizer*)recognizer {
-    GAGTouchPoint currentTouchPoint = [self getRealTouchPoint:recognizer];
-    CGFloat upperOffsetY = currentTouchPoint.upper.y  -  self.startPoint.upper.y;
-    CGFloat lowerOffsetY = self.startPoint.lower.y - currentTouchPoint.lower.y;
+
+- (NSArray <UIImage*>*)getPlaceholderTopAndBottomImageFromCache {
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *filePath = [path stringByAppendingPathComponent:@"placeholder.png"];
     
-    float offset = - MIN(0, MIN(upperOffsetY, lowerOffsetY));
-
-
-    for (int i = 0; i < self.items.things.count; i++) {
-        GAGTableViewCell *cell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-        if (i < self.newCellIndex) {
-            cell.transform = CGAffineTransformMakeTranslation(0, - offset);
-        }
-        if (i >= self.newCellIndex) {
-            cell.transform = CGAffineTransformMakeTranslation(0,  offset);
-        }
+    if (![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+        UIImage *placeholderImage = [UIView snapshotUIImage:self.placeholderCell];
+        NSString *imagePath = [path stringByAppendingPathComponent:@"placeholder.png"];
+        [UIImagePNGRepresentation(placeholderImage) writeToFile:imagePath atomically:YES];
     }
-    
-    GAGTableViewCell *upperCell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:(self.newCellIndex - 1) inSection:0]];
-    GAGTableViewCell *lowerCell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.newCellIndex inSection:0]];
-    NSLog(@"upperCell---- %p",upperCell);
-    NSLog(@"lowerCell---- %p",lowerCell);
+    UIImage *originalImage = [UIImage imageWithContentsOfFile:filePath];
+    UIImage *topImage = [originalImage imageByCroppingWithStyle:GAGCropImageStyleTop];
+    UIImage *bottomImage = [originalImage imageByCroppingWithStyle:GAGCropImageStyleBottom];
+    return @[topImage,bottomImage];
 
-    self.placeholderCell.center = CGPointMake(self.width * 0.5, CGRectGetMaxY(upperCell.frame) + 0.5 * (lowerCell.y - CGRectGetMaxY(upperCell.frame)));
-    NSLog(@"Cell.center%@",NSStringFromCGPoint(self.placeholderCell.center));
-    
-    NSLog(@"offset----%f",offset);
-
-    self.placeholderCell.height = MIN(offset * 2, TableViewCellHeight);
-    NSLog(@"cell.height %f", self.placeholderCell.height);
-
-    //设置占位cell的frame
-    //设置占位cell的内容
-    self.placeholderCell.textField.text = @"pull to create items";
-    self.placeholderCell.layer.anchorPoint = CGPointMake(0.5, 0.5);
-//    self.placeholderCell.transform = CGAffineTransformMakeScale(1.0f,offset * 2 / TableViewCellHeight);
-//    self.placeholderCell.transform = CGAffineTransformMakeScale(1,1);
-
-    NSLog(@"Cell.frame%@",NSStringFromCGRect(self.placeholderCell.frame));
-    NSLog(@"Feld.frame%@",NSStringFromCGRect(self.placeholderCell.textField.frame));
-    NSLog(@"---------------------------------------------");
-    /*
-    //计算旋转角度
-    CGFloat angle = M_PI_2 - fabs(offset) * M_PI_2 /  TableViewCellHeight;
-    CATransform3D transform = CATransform3DIdentity;
-    transform.m34 = - 1 / 100.0;
-    //设置占位cell的锚点
-    self.placeholderCell.layer.anchorPoint = CGPointMake(0.5, 0.5);
-    
-    //做CATransform3DRotate变换
-    self.placeholderCell.layer.transform = CATransform3DRotate(transform,angle, 1, 0, 0);
-    */
 }
-- (void)pinchEnded:(UIPinchGestureRecognizer*)recognizer {
-//    NSLog(@"%s",__func__);
-    [self.placeholderCell removeFromSuperview];
-    for (UIView *view in self.subviews) {
-        if ([view isKindOfClass:[GAGTableViewCell class]]) {
-            [UIView animateWithDuration:0.5 animations:^{
-                view.transform = CGAffineTransformIdentity;
-     
-            }];
-        }
-    }
-}
-
-
 /**
  get read two touch points in tableView
  
@@ -466,10 +499,10 @@ typedef struct GAGTouchPoint GAGTouchPoint;
 - (GAGTouchPoint)getRealTouchPoint : (UIPinchGestureRecognizer*)recognizer {
     CGPoint pointOne = [recognizer locationOfTouch:0 inView:self];
     CGPoint pointTwo = [recognizer locationOfTouch:1 inView:self];
-
     
-//    pointOne.y += self.contentOffset.y;
-//    pointTwo.y += self.contentOffset.y;
+    
+    //    pointOne.y += self.contentOffset.y;
+    //    pointTwo.y += self.contentOffset.y;
     
     if (pointOne.y > pointTwo.y) {
         CGPoint temp = pointOne;
@@ -480,6 +513,136 @@ typedef struct GAGTouchPoint GAGTouchPoint;
     GAGTouchPoint point = {pointOne,pointTwo};
     return point;
 }
+
+
+/**
+ caculate offset of pinch recognizer
+
+ @param recognizer UIPinchGestureRecognizer
+ @return CGFloat offset
+ */
+- (CGFloat)pinchOffsetWith:(UIPinchGestureRecognizer*)recognizer {
+    GAGTouchPoint currentTouchPoint = [self getRealTouchPoint:recognizer];
+    CGFloat upperOffsetY = currentTouchPoint.upper.y  -  self.startPoint.upper.y;
+    CGFloat lowerOffsetY = self.startPoint.lower.y - currentTouchPoint.lower.y;
+    
+    //偏移量
+    return  - MIN(0, MIN(upperOffsetY, lowerOffsetY));
+}
+
+
+/**
+ move cells up or down when pinchChanged
+
+ @param offset <#offset description#>
+ */
+- (void)moveOtherCellsWithOffset:(CGFloat)offset {
+    
+    for (int i = 0; i < self.items.things.count; i++) {
+        GAGTableViewCell *cell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        if (i < self.addCellIndex.row) {
+            cell.transform = CGAffineTransformMakeTranslation(0, - offset);
+        }
+        if (i >= self.addCellIndex.row) {
+            cell.transform = CGAffineTransformMakeTranslation(0,  offset);
+        }
+    }
+}
+- (void)pinchChanged:(UIPinchGestureRecognizer*)recognizer {
+    NSLog(@"%s",__func__);
+
+    //得到手指指向的位置
+    self.pinchOffset = [self pinchOffsetWith:recognizer];
+    NSLog(@"offset----%f",self.pinchOffset);
+
+    //上下移动其他cell
+    [self moveOtherCellsWithOffset:self.pinchOffset];
+    
+    //得到插入新位置的上下cell
+    GAGTableViewCell *upperCell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:(self.addCellIndex.row - 1) inSection:0]];
+    GAGTableViewCell *lowerCell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.addCellIndex.row inSection:0]];
+
+    self.cellImageView1.center = CGPointMake(self.width * 0.5, CGRectGetMaxY(upperCell.frame) + 0.5 * (lowerCell.y - CGRectGetMaxY(upperCell.frame)));
+    self.cellImageView2.center = self.cellImageView1.center;
+    
+    if (self.pinchOffset > 0 && self.pinchOffset < TableViewCellHeight * 0.5){
+    
+//  center
+//        self.cellImageView1.center = CGPointMake(self.width * 0.5, CGRectGetMaxY(upperCell.frame) + 0.25 * (lowerCell.y - CGRectGetMaxY(upperCell.frame)));
+//        self.cellImageView2.center = CGPointMake(self.width * 0.5, CGRectGetMaxY(upperCell.frame) + 0.75 * (lowerCell.y - CGRectGetMaxY(upperCell.frame)));
+        
+//    offset = offset * ;
+//    CGFloat angle1 = - M_PI_2 + offset * 11 * M_PI_4 / (60 * 3);
+//    CGFloat angle2 = M_PI_2 - offset * 11 * M_PI_4 / (60 * 3);
+        
+    CGFloat angle1 = - M_PI_2 + self.pinchOffset * 11 * M_PI_4 / (60 * 3);
+    CGFloat angle2 = M_PI_2 - self.pinchOffset * 11 * M_PI_4 / (60 * 3);
+    CATransform3D transform = CATransform3DIdentity;
+    transform.m34 = - 1 / 200.0;
+    
+    CATransform3D transRotate1 = CATransform3DRotate(transform,angle1, 1, 0, 0);
+    CATransform3D transTranslate1 = CATransform3DMakeTranslation(0, -  self.pinchOffset * 11 * 15/ (60 * 3), 0);
+    
+    self.cellImageView1.layer.transform = CATransform3DConcat (transRotate1,transTranslate1);
+    CATransform3D transRotate2 = CATransform3DRotate(transform,angle2, 1, 0, 0);
+    CATransform3D transTranslate2 = CATransform3DMakeTranslation(0, self.pinchOffset * 11 * 15/ (60 * 3), 0);
+    self.cellImageView2.layer.transform = CATransform3DConcat (transRotate2,transTranslate2);
+
+        
+        
+ }else {
+     self.cellImageView1.layer.transform = CATransform3DIdentity;
+     self.cellImageView2.layer.transform = CATransform3DIdentity;
+     
+     //调整两个imageView的center,调整好两者的位置关系
+     CGPoint center1 = self.cellImageView1.center;
+     self.cellImageView2.center = CGPointMake(center1.x, center1.y + self.cellImageView1.height );
+     self.cellImageView1.center = CGPointMake(center1.x, center1.y - self.cellImageView1.height);
+    }
+ 
+}
+- (void)pinchEnded:(UIPinchGestureRecognizer*)recognizer {
+        NSLog(@"%s",__func__);
+
+    
+        [UIView animateWithDuration:0.3 animations:^{
+            for (int i = 0; i < self.items.things.count; i++) {
+                GAGTableViewCell *cell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+                
+                cell.transform = CGAffineTransformIdentity;
+            }
+        }];
+    
+
+ if (self.pinchOffset > 30) {
+    [self.cellImageView1 removeFromSuperview];
+    [self.cellImageView2 removeFromSuperview];
+    //拿到第一个cell，让他成为响应者。并接着用户编辑事件
+    [UIView animateWithDuration:0.5 animations:^{
+        GAGItem *newItem = [[GAGItem alloc]init];
+        [self.items addItemAtIndex:newItem index:self.addCellIndex.row];
+        [self insertRowsAtIndexPaths:@[self.addCellIndex] withRowAnimation:UITableViewRowAnimationNone];
+   } completion:^(BOOL finished) {
+       NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:self.addCellIndex.row  inSection:0];
+        GAGTableViewCell *newCell = [self cellForRowAtIndexPath:newIndexPath];
+       
+       
+
+        [newCell.textField becomeFirstResponder];
+//        [self cellDidBeginEditing:firstCell];
+    }];
+     
+}
+}
+
+- (void)logCellAddr{
+    for (NSInteger i = 0; i < self.items.things.count; i++) {
+        GAGTableViewCell *cell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+        NSLog(@"%p",cell);
+    }
+    NSLog(@"------------");
+}
+
 #pragma mark - LongPress delegate
 - (void)cellDidLongPress:(GAGTableViewCell*)cell longPress:(UILongPressGestureRecognizer *)longPress {
     
@@ -502,7 +665,7 @@ typedef struct GAGTouchPoint GAGTouchPoint;
                 break;
             }
             case UIGestureRecognizerStateChanged:{//点击位置移动，判断手指按住位置是否进入其它indexPath范围，若进入则更新数据源并移动cell
-               if (self.currentType == GAGTableViewLongPressToMove) {
+               if (self.currentType == GAGTableViewLongPressToMove && self.currentType != GAGTableViewPinchToAdd) {
                     //截图跟随手指移动
                     CGPoint center = _snapshotView.center;
                     center.y = self.longLocation.y;

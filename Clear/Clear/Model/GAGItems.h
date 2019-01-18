@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)addItemAtTop:(GAGItem*)item;
 
+- (void)addItemAtIndex:(GAGItem*)item index:(NSUInteger)index;
+
 - (void)removeItemAtIndexes:(NSUInteger)index;
 
 - (void)moveItemFromIndex:(NSUInteger)fromIndex toIndex:(NSUInteger)toIndex;

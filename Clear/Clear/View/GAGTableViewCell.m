@@ -256,12 +256,11 @@ const CGFloat kUI_CUES_WIDTH = 50.0f;
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    if (self.longPressRecognizer) {
+//    if (self.longPressRecognizer) {
         if ([self.delegate respondsToSelector:@selector(cellDidBeginEditing:)]) {
             [self.delegate cellDidBeginEditing:self];
         }
-    }
-  
+//    }
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField

@@ -70,7 +70,6 @@
     self.headerLabel.font = [UIFont systemFontOfSize:15];
     self.headerLabel.textAlignment = NSTextAlignmentCenter;
     self.headerLabel.text = self.items.theme;
-    
 }
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
@@ -91,11 +90,11 @@
 
 #pragma mark - GAGTableViewDelegate
 
-- (void)cellDidBeginEditing {
+- (void)tableViewDidBeginEditing {
      self.headerLabel.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:1];
 }
 
-- (void)cellDidEndEditing {
+- (void)tableViewDidEndEditing {
     self.headerLabel.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:HeaderLabelAlpha];
 }
 

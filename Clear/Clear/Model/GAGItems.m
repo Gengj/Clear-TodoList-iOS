@@ -55,6 +55,10 @@
     [self.things insertObject:item atIndex:0];
 }
 
+- (void)addItemAtIndex:(GAGItem*)item index:(NSUInteger)index{
+    [self.things insertObject:item atIndex:index];
+}
+
 //- (void)sortByCompletion {
 //    for (NSUInteger index = 0; index < self.things.count; index++) {
 //        GAGItem *item = self.things[index];
