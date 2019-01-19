@@ -14,6 +14,25 @@
 #import "UIView+Frame.h"
 #import "UIView+UIImage.h"
 #import "UIImage+Rect.h"
+
+//状态栏高度
+#define StatusbarHeight [[UIApplication sharedApplication] statusBarFrame].size.height
+//屏幕宽度
+#define ScreenWidth  [[UIScreen mainScreen] bounds].size.width
+//屏幕高度
+#define ScreenHeight [[UIScreen mainScreen] bounds].size.height
+
+//类似于UINavigationBar的头部标题高度 height of header label which like UINavigationBar
+#define HeaderLabelHeight 20
+//类似于UINavigationBar的头部标题的透明度 alpha of header label which like UINavigationBar
+#define HeaderLabelAlpha 0.7
+//cell高度
+#define TableViewCellHeight 60
+
+
+//log function
+#define LogFunc NSLog(@"%s",__func__);
+
 #endif
 
 #endif 

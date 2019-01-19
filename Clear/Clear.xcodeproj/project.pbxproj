@@ -194,8 +194,8 @@
 		0C8E4F0B21CC086F00259905 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				0C8E4F0C21CC086F00259905 /* GAGFileOperation.m */,
 				0C8E4F0D21CC086F00259905 /* GAGFileOperation.h */,
+				0C8E4F0C21CC086F00259905 /* GAGFileOperation.m */,
 			);
 			path = Tools;
 			sourceTree = "<group>";

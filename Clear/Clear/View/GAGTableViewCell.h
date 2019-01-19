@@ -8,18 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
-@class GAGItem;
-@class GAGStrikethroughTextField;
-@class GAGTableViewCell;
+#import "GAGStrikethroughTextField.h"
+#import "GAGItem.h"
+#import "GAGItems.h"
+#import "UIView+Frame.h"
 
+@class GAGTableViewCell;
 NS_ASSUME_NONNULL_BEGIN
 
 /**
  GAGTableViewCellDelegate
  */
 @protocol GAGTableViewCellDelegate <NSObject>
-@required
-
+@optional
 /**
  when cell should been deleted
 
@@ -35,18 +36,18 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)cellShouldCompleted:(GAGItem*)item;
 
 /**
- when cell did end editing
-
- @param cell which edit
- */
-- (void)cellDidEndEditing:(GAGTableViewCell*)cell;
-
-/**
  when cell did begin editing
 
  @param cell which edit
  */
-- (void)cellDidBeginEditing:(GAGTableViewCell*)cell;
+- (void)cellDidBeginEditing:(GAGTableViewCell*)cell item:(GAGItem*)item;
+
+/**
+ when cell did end editing
+ 
+ @param cell which edit
+ */
+- (void)cellDidEndEditing:(GAGTableViewCell*)cell item:(GAGItem*)item;
 
 /**
  when cell did longPress
@@ -54,9 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param longPress UILongPressGestureRecognizer
  */
 - (void)cellDidLongPress:(GAGTableViewCell*)cell longPress:(UILongPressGestureRecognizer *)longPress;
+
 @end
-
-
 
 @interface GAGTableViewCell : UITableViewCell
 /**

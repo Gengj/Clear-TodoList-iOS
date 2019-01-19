@@ -10,12 +10,25 @@
 
 @implementation GAGItem 
 
+/**
+ Creates and returns a item with dictionary
+ */
 + (instancetype)itemWithDict:(NSDictionary*)dict {
     GAGItem *item = [[GAGItem alloc]init];
     [item setValuesForKeysWithDictionary:dict];
     return item;
 }
 
+/**
+ Creates and returns a item with thing , completed default is NO.
+ */
++ (instancetype)itemWithThing:(NSString*)thing {
+    return [self itemWithThing:thing completed:NO];
+}
+
+/**
+ Creates and returns a item with thing & completed.
+ */
 + (instancetype)itemWithThing:(NSString*)thing completed:(BOOL)completed {
     GAGItem *item = [[GAGItem alloc]init];
     item.thing = thing;

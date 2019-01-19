@@ -7,17 +7,22 @@
 //
 
 #import "GAGHeaderLabel.h"
-#define StatusbarHeight [[UIApplication sharedApplication] statusBarFrame].size.height
+
 @implementation GAGHeaderLabel
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:HeaderLabelAlpha];
+        self.textColor = [UIColor whiteColor];
+        self.font = [UIFont systemFontOfSize:15];
+        self.textAlignment = NSTextAlignmentCenter;
+    }
+    return self;
 }
-*/
 
+//设置GAGHeaderLabel的text在底部居中 set GAGHeaderLabel.text at the center of bottom
 - (void)drawTextInRect:(CGRect)rect {
     UIEdgeInsets insets = {StatusbarHeight, 5, 0, 5};
     [super drawTextInRect:UIEdgeInsetsInsetRect(rect, insets)];

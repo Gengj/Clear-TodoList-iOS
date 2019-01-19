@@ -17,22 +17,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic,assign) BOOL completed;
 
 /**
- init with dictionary
-
- @param dict <#dict description#>
- @return <#return value description#>
+ Creates and returns a item with dictionary
  */
 + (instancetype)itemWithDict:(NSDictionary*)dict;
 
+/**
+ Creates and returns a item with thing , completed default is NO.
+ */
++ (instancetype)itemWithThing:(NSString*)thing;
 
 /**
- <#Description#>
-
- @param thing <#thing description#>
- @param completed <#completed description#>
- @return <#return value description#>
+ Creates and returns a item with thing & completed.
  */
 + (instancetype)itemWithThing:(NSString*)thing completed:(BOOL)completed;
+
+
 
 @end
 

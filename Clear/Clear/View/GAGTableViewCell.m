@@ -8,9 +8,6 @@
 
 
 #import "GAGTableViewCell.h"
-#import "GAGStrikethroughTextField.h"
-#import "GAGItem.h"
-#import "UIView+Frame.h"
 
 const CGFloat kLABEL_LEFT_MARGIN = 15.0f;
 const CGFloat kUI_CUES_MARGIN = 10.0f;
@@ -175,7 +172,6 @@ const CGFloat kUI_CUES_WIDTH = 50.0f;
 #pragma mark - handlePan
 
 - (void)handlePan:(UIPanGestureRecognizer *)recognizer {
-    NSLog(@"pan");
 
     if ([recognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
         if (recognizer.state == UIGestureRecognizerStateBegan) {
@@ -257,17 +253,17 @@ const CGFloat kUI_CUES_WIDTH = 50.0f;
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
 //    if (self.longPressRecognizer) {
-        if ([self.delegate respondsToSelector:@selector(cellDidBeginEditing:)]) {
-            [self.delegate cellDidBeginEditing:self];
-        }
+    if ([self.delegate respondsToSelector:@selector(cellDidBeginEditing:item:)]) {
+            [self.delegate cellDidBeginEditing:self item:self.item];
+    }
 //    }
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     self.textField.text = textField.text;
-    if ([self.delegate respondsToSelector:@selector(cellDidEndEditing:)]) {
-        [self.delegate cellDidEndEditing:self];
+    if ([self.delegate respondsToSelector:@selector(cellDidEndEditing:item:)]) {
+        [self.delegate cellDidEndEditing:self item:self.item];
     }
 }
 

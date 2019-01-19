@@ -13,25 +13,20 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GAGFileOperation : NSObject
 
 /**
- <#Description#>
-
- @return <#return value description#>
+ 返回GAGFileOperation单例对象
+ Returns the singleton GAGFileOperation instance.
  */
 + (instancetype)shareOperation;
 
 /**
- <#Description#>
-
- @param items <#items description#>
- @return <#return value description#>
+ 保存GAGItems对象，文件名是GAGItems.theme
+ save items
  */
-- (BOOL)save:(GAGItems*)items;
+- (void)save:(GAGItems*)items;
 
 /**
- <#Description#>
-
- @param fileName <#fileName description#>
- @return <#return value description#>
+ 从指定文件名读取GAGItems对象
+ read GAGItems with fileName in NSDocumentDirectory
  */
 - (GAGItems *)read:(NSString*)fileName;
 @end

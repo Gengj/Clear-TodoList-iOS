@@ -8,13 +8,6 @@
 
 #import "GAGBaseTableView.h"
 
-#define TableViewCellHeight 60
-//static const float TableViewCellHeight = 60;
-#define HeaderLabelHeight 20
-#define StatusbarHeight [[UIApplication sharedApplication] statusBarFrame].size.height
-#define ScreenWidth  [[UIScreen mainScreen] bounds].size.width
-#define ScreenHeight [[UIScreen mainScreen] bounds].size.height
-
 typedef NS_ENUM(NSInteger, GAGTableViewGestureType) {
     //下拉添加
     GAGTableViewPullToAdd,
@@ -101,8 +94,6 @@ typedef struct GAGTouchPoint GAGTouchPoint;
 {
     self = [super initWithFrame:frame];
     if (self) {
-        
-        self.tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.width, TableViewCellHeight * 2)];
         //color
         self.backgroundColor = [UIColor clearColor];
         self.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -206,105 +197,85 @@ typedef struct GAGTouchPoint GAGTouchPoint;
 
 #pragma mark - GAGBaseTableViewCellDelegate
 - (void)cellShouldDeleted:(GAGItem*)item {
-    [self log];
     
     NSUInteger index = [self.items.things indexOfObject:item];
     [self.items.things removeObject:item];
+    [[GAGFileOperation shareOperation]save:self.items];
     
-    if ([[GAGFileOperation shareOperation]save:self.items]) {
-        [UIView animateWithDuration:0.5 animations:^{
-            [self deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
-            
-        }];
-    }
+    [UIView animateWithDuration:0.5 animations:^{
+        [self deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]] withRowAnimation:UITableViewRowAnimationLeft];
+    }completion:^(BOOL finished) {
+        [self reloadData];
+    }];
+    
     [self log];
 }
 
-#pragma mark - will add new feature
 // 已完成的再滑动变未完成
 - (void)cellShouldCompleted:(GAGItem*)item{
-    [self log];
     
     NSUInteger index = [self.items.things indexOfObject:item];
 //    self.items.things[index].completed = !item.completed;
-    [self.items moveItemToCompletionIndex:index];
+    [self.items moveItemToCompletionWithIndex:index];
+    [[GAGFileOperation shareOperation]save:self.items];
 
-    if ([[GAGFileOperation shareOperation]save:self.items]) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-        NSIndexPath *toIndexPath;
-        toIndexPath = [NSIndexPath indexPathForRow:[self.items countofUnCompletedThing] inSection:0];
-    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+    NSIndexPath *toIndexPath = [NSIndexPath indexPathForRow:[self.items getCountOfUncompletedItem] inSection:0];
+
+    [UIView animateWithDuration:0.5 animations:^{
         [self moveRowAtIndexPath:indexPath toIndexPath:toIndexPath];
-    }
+    } completion:^(BOOL finished) {
+        [self reloadData];
+    }];
+
     [self log];
     
 }
 
-- (void)cellDidBeginEditing:(GAGTableViewCell*)cell{
-//       [cell.textField becomeFirstResponder];
-
+- (void)cellDidBeginEditing:(GAGTableViewCell*)cell item:(GAGItem*)item{
     cell.gestureRecognizerEnable = NO;
     
-    CGFloat selectedCellY = cell.y;
-    
-//    for (UIView *view in self.subviews) {
-//        if ([view isKindOfClass:[GAGTableViewCell class]]) {
-            NSLog(@"transform -- %f",cell.y);
-//            [UIView animateWithDuration:0.2 animations:^{
-//                view.transform = CGAffineTransformMakeTranslation(0,- selectedCellY);
-//
-//                if ([self.tableViewDelegate respondsToSelector:@selector(cellDidBeginEditing)]) {
-//                    [self.tableViewDelegate cellDidBeginEditing];
-//                }
-//            }completion:^(BOOL finished) {
-//                [self setCoverViewHidden:NO];
-//
-//            }];
-//        }
-//    }
     if ([self.tableViewDelegate respondsToSelector:@selector(tableViewDidBeginEditing)]) {
         [self.tableViewDelegate tableViewDidBeginEditing];
     }
     [self setCoverViewHidden:NO];
-
-    for (int i = 0; i < self.items.things.count; i++) {
-
-        GAGTableViewCell *subviewscell = [self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-        NSLog(@"before move --- %p  %f",subviewscell,subviewscell.y);
-//        subviewscell.transform = CGAffineTransformIdentity;
-
-                        subviewscell.transform = CGAffineTransformMakeTranslation(0,- selectedCellY);
-        NSLog(@"after  move --- %p  %f",subviewscell,subviewscell.y);
-
-        
+    
+    CGFloat selectedCellY = cell.y;
+    
+    for (GAGTableViewCell *cell in self.visibleCells) {
+        cell.transform = CGAffineTransformMakeTranslation(0,- selectedCellY);
     }
+ 
+    [self log];
 }
 
-- (void)cellDidEndEditing:(GAGTableViewCell*)cell{
+- (void)cellDidEndEditing:(GAGTableViewCell*)cell item:(GAGItem*)item{
     cell.gestureRecognizerEnable = YES;
-
-    [self setCoverViewHidden:YES];
-    NSIndexPath *indexPath = [self indexPathForCell:cell];
     
-    for (UIView *view in self.subviews) {
-        if ([view isKindOfClass:[GAGTableViewCell class]]) {
-            [UIView animateWithDuration:0.5 animations:^{
-                view.transform = CGAffineTransformIdentity;
-                if ([self.tableViewDelegate respondsToSelector:@selector(tableViewDidEndEditing)]) {
-                    [self.tableViewDelegate tableViewDidEndEditing];
-                }
-            }];
-        }
+    if ([self.tableViewDelegate respondsToSelector:@selector(tableViewDidEndEditing)]) {
+        [self.tableViewDelegate tableViewDidEndEditing];
     }
+    [self setCoverViewHidden:YES];
     
-    //cell内容为空时，需要被删除
+    [UIView animateWithDuration:0.5 animations:^{
+        for (GAGTableViewCell *cell in self.visibleCells) {
+            cell.transform = CGAffineTransformIdentity;
+        }
+    }];
+
+    
+    NSUInteger index = [self.items.things indexOfObject:item];
+        //cell内容为空时，需要被删除
     if ([cell.textField.text isEqualToString:[NSString stringWithFormat:@""]]) {
-        [self cellShouldDeleted:self.items.things[indexPath.row]];
+        [self cellShouldDeleted:self.items.things[index]];
     }else {    //cell内容不为空时，需要保存
-        self.items.things[indexPath.row].thing = cell.textField.text;
+        self.items.things[index].thing = cell.textField.text;
         [[GAGFileOperation shareOperation]save:self.items];
         [self reloadData];
     }
+    
+    [self log];
+
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -325,7 +296,7 @@ typedef struct GAGTouchPoint GAGTouchPoint;
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     //由于tableView初始时又偏移量，因此计算下偏移量
     self.realTableViewOffsetY = scrollView.contentOffset.y + HeaderLabelHeight + StatusbarHeight;
-    NSLog(@"DidScroll ---realTableViewOffsetY    %f",self.realTableViewOffsetY);
+//    NSLog(@"DidScroll ---realTableViewOffsetY    %f",self.realTableViewOffsetY);
     
     //向下滑动
     if (scrollView.contentOffset.y < self.historyTableViewOffsetY && self.currentType == GAGTableViewPullToAdd) {
@@ -395,12 +366,7 @@ typedef struct GAGTouchPoint GAGTouchPoint;
     
 }
 
-- (void)log {
-    for (GAGItem *item in self.items.things) {
-        NSLog(@"%@---%d",item.thing,item.completed);
-    }
-    NSLog(@"++++++++++++++++++++");
-}
+
 #pragma mark - handle pinch gesture
 - (void)handlePinch:(UIPinchGestureRecognizer*)recognizer {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
@@ -834,6 +800,12 @@ typedef struct GAGTouchPoint GAGTouchPoint;
 }
 
 
+- (void)log {
+    for (GAGItem *item in self.items.things) {
+        NSLog(@"%@---%d",item.thing,item.completed);
+    }
+    NSLog(@"++++++++++++++++++++");
+}
 
 @end
 
