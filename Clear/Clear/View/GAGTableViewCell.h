@@ -59,29 +59,42 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface GAGTableViewCell : UITableViewCell
+
 /**
  渐变层 Gradient Layer for making different from other cell
  */
 @property (nonatomic,strong) CAGradientLayer *gradientLayer;
 
-
-@property (nonatomic,assign) BOOL gestureRecognizerEnable;
 /**
- model
+ textField
  */
-@property (nonatomic,strong) GAGItem *item;
-
 @property (nonatomic,strong) GAGStrikethroughTextField *textField;
+
 
 @property (nonatomic,weak) id<GAGTableViewCellDelegate> delegate;
 
-+ (instancetype)cellWithTableView:(UITableView*)tableView;
 
 /**
  cell 是否在长按，长按时不允许接受textField的点击事件
  */
 @property (nonatomic,assign) BOOL isLongPress;
 
+/**
+ set Gesture Recognizer enable 设置cell是否允许接收手势事件
+ */
+@property (nonatomic,assign) BOOL gestureRecognizerEnable;
+
+/**
+ model
+ */
+@property (nonatomic,strong) GAGItem *item;
+
+
+/**
+ return GAGTableViewCell instance with TableView
+
+ */
++ (instancetype)cellWithTableView:(UITableView*)tableView;
 
 @end
 

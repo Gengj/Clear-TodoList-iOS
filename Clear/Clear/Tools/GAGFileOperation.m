@@ -15,17 +15,25 @@
  返回GAGFileOperation单例对象
  Returns the singleton GAGFileOperation instance.
  */
-static GAGFileOperation *_instance;
-+ (instancetype)allocWithZone:(struct _NSZone *)zone {
++(GAGFileOperation *) sharedOperation{
+    static GAGFileOperation * s_instance_dj_singleton = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _instance = [super allocWithZone:zone];
+        s_instance_dj_singleton = [[super allocWithZone:nil] init];
     });
-    return _instance;
+    return s_instance_dj_singleton;
 }
 
-+ (instancetype)shareOperation {
-    return [[self alloc]init];
++(id)allocWithZone:(NSZone *)zone{
+    return [GAGFileOperation sharedOperation];
+}
+
+-(id)copyWithZone:(NSZone *)zone{
+    return [GAGFileOperation sharedOperation];
+}
+
+-(id)mutableCopyWithZone:(NSZone *)zone{
+    return [GAGFileOperation sharedOperation];
 }
 
 /**
@@ -46,6 +54,7 @@ static GAGFileOperation *_instance;
  */
 - (GAGItems *)read:(NSString*)fileName {
     NSString *path =  [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSLog(@"%@",path);
     NSString *filePath = [path stringByAppendingPathComponent:fileName];
     GAGItems *items  =  [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
     return items;

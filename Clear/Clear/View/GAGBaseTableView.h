@@ -12,20 +12,32 @@
 #import "GAGFileOperation.h"
 
 NS_ASSUME_NONNULL_BEGIN
+
+/**
+ GAGTableViewDelegate
+ */
 @protocol GAGTableViewDelegate <NSObject>
 
 @optional
 - (void)tableViewDidBeginEditing;
+
 - (void)tableViewDidEndEditing;
 
 @end
+
 @interface GAGBaseTableView : UITableView
 
-@property (nonatomic,assign) BOOL coverViewHidden;
-
+/**
+ model
+ */
 @property (nonatomic,strong) GAGItems* items;
 
+
+/**
+ tableViewDelegate
+ */
 @property (nonatomic,weak) id<GAGTableViewDelegate> tableViewDelegate;
+
 @end
 
 NS_ASSUME_NONNULL_END

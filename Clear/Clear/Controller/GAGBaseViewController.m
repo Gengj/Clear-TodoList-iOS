@@ -72,12 +72,13 @@
 #pragma mark - lazy loading
 - (GAGItems *)items {
     if (_items == nil) {
-        _items = [[GAGFileOperation shareOperation]read:@"ios learn.plist"];
-       
+        
+        NSString *path = [[NSBundle mainBundle]pathForResource:@"Welcome to Clear.plist" ofType:nil];
+        _items = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+               
         //可以使用items的重置方法进行调试
-        //using resetItems for debug
         [_items resetItems];
-        [[GAGFileOperation shareOperation]save:self.items];
+        [[GAGFileOperation sharedOperation]save:self.items];
     }
     return _items;
 }
@@ -96,4 +97,9 @@
     self.headerLabel.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:HeaderLabelAlpha];
 }
 
+#warning to-do check delloc
+- (void)dealloc
+{
+    LogFunc;
+}
 @end

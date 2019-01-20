@@ -29,6 +29,8 @@
 //cell高度
 #define TableViewCellHeight 60
 
+//cell ID
+#define GAGTableViewCellID @"GAGTableViewCellID"
 
 //log function
 #define LogFunc NSLog(@"%s",__func__);

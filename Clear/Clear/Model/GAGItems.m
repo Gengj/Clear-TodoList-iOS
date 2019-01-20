@@ -11,6 +11,8 @@
 
 @implementation GAGItems
 
+
+
 /**
  Creates and returns items with dict
  */
@@ -39,13 +41,20 @@
  move index item to the first of completed items (the end of uncompleted items)
  */
 - (void)moveItemToCompletionWithIndex:(NSUInteger)index{
-    
-    NSUInteger targetIndex = [self getCountOfUncompletedItem] + 1;
-    
+    NSUInteger targetIndex;
     GAGItem *item = self.things[index];
-    item.completed = YES;
-    [self.things insertObject:item atIndex:targetIndex];
-    [self.things removeObjectAtIndex:index];
+    if (item.completed == YES) {
+        targetIndex  = [self getCountOfUncompletedItem] + 1;
+        [self.things insertObject:item atIndex:targetIndex];
+        [self.things removeObjectAtIndex:index];
+    }else {
+        targetIndex = [self getCountOfUncompletedItem] - 1;
+        [self.things insertObject:item atIndex:targetIndex];
+        [self.things removeObjectAtIndex:index + 1];
+    }
+    
+//    item.completed = YES;
+
 }
 
 /**
@@ -108,22 +117,23 @@
  reset all items of list for debug
  */
 - (void)resetItems {
-     [self.things removeAllObjects];
-     [self.things addObject:[GAGItem itemWithThing:@"Feed the cat" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Buy eggs" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Pack bags for WWDC" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Rule the web" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Buy a new iPhone" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Find missing socks" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Write a new tutorial" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Master Objective-C" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Remember your wedding anniversary!" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Drink less beer" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Learn to draw" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Take the car to the garage" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Sell things on eBay" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Learn to juggle" completed:NO]];
-     [self.things addObject:[GAGItem itemWithThing:@"Give up" completed:NO]];
+    self.theme = @"Welcome to Clear";
+    [self.things removeAllObjects];
+    [self.things addObject:[GAGItem itemWithThing:@"0-Feed the cat" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"1-Buy eggs" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"2-Pack bags for WWDC" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"3-Rule the web" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"4-Buy a new iPhone" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"5-Find missing socks" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"6-Write a new tutorial" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"7-Master Objective-C" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"8-Remember your wedding anniversary!" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"9-Drink less beer" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"10-Learn to draw" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"11-Take the car to the garage" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"12-Sell things on eBay" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"13-Learn to juggle" completed:NO]];
+    [self.things addObject:[GAGItem itemWithThing:@"14-Give up" completed:NO]];
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder

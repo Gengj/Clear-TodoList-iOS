@@ -34,7 +34,8 @@ const CGFloat kSTRIKEOUT_THICKNESS = 2.0f;
         self.textColor = [UIColor whiteColor];
         self.font = [UIFont systemFontOfSize:kFONT_SIZE];
         self.backgroundColor = [UIColor clearColor];
-        self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    
+//        self.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
         self.returnKeyType = UIReturnKeyDone;
     }
     return self;

@@ -25,6 +25,7 @@
 		0C8E4F1E21CC086F00259905 /* GAGTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C8E4F1421CC086F00259905 /* GAGTableViewCell.m */; };
 		0C8E4F1F21CC086F00259905 /* GAGStrikethroughTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C8E4F1521CC086F00259905 /* GAGStrikethroughTextField.m */; };
 		0C8E4F2221CE275000259905 /* GAGBaseTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C8E4F2121CE275000259905 /* GAGBaseTableView.m */; };
+		0CC10A6E21F48AEC0016B5B0 /* Welcome to Clear.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0CC10A6D21F48AEB0016B5B0 /* Welcome to Clear.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +84,7 @@
 		0C8E4F1721CC086F00259905 /* GAGTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GAGTableViewCell.h; sourceTree = "<group>"; };
 		0C8E4F2021CE275000259905 /* GAGBaseTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAGBaseTableView.h; sourceTree = "<group>"; };
 		0C8E4F2121CE275000259905 /* GAGBaseTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GAGBaseTableView.m; sourceTree = "<group>"; };
+		0CC10A6D21F48AEB0016B5B0 /* Welcome to Clear.plist */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "Welcome to Clear.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +144,7 @@
 				0C8E4ED221CC07BB00259905 /* AppDelegate.m */,
 				0C8E4EDA21CC07BC00259905 /* Assets.xcassets */,
 				0C8E4EDC21CC07BC00259905 /* LaunchScreen.storyboard */,
+				0CC10A6D21F48AEB0016B5B0 /* Welcome to Clear.plist */,
 				0C8E4EDF21CC07BC00259905 /* Info.plist */,
 				0C15BB3721E3959800992A43 /* GAGClear.pch */,
 				0C8E4EE021CC07BC00259905 /* main.m */,
@@ -329,6 +332,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0CC10A6E21F48AEC0016B5B0 /* Welcome to Clear.plist in Resources */,
 				0C8E4EDE21CC07BC00259905 /* LaunchScreen.storyboard in Resources */,
 				0C8E4EDB21CC07BC00259905 /* Assets.xcassets in Resources */,
 			);

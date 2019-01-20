@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
  返回GAGFileOperation单例对象
  Returns the singleton GAGFileOperation instance.
  */
-+ (instancetype)shareOperation;
++ (instancetype)sharedOperation;
 
 /**
  保存GAGItems对象，文件名是GAGItems.theme
