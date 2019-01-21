@@ -23,8 +23,13 @@ It had implemented majority of original App :
 
 Demo Project
 ==============
-See `Clear.xcodeproj`
-Gifs upload after a time
+| Effect  | GIF |
+|-------|-------|
+| **Pan Right To Complete** | ![Zoom](https://github.com/Gengj/Clear-TodoList-iOS/blob/master/Gif/complete.gif) | 
+| **Pan Left To Delete** | ![Refresh](https://github.com/Gengj/Clear-TodoList-iOS/blob/master/Gif/delete.gif) |
+| **LongPress To Move** | ![Refresh](https://github.com/Gengj/Clear-TodoList-iOS/blob/master/Gif/move.gif) |
+| **Pull Down To Add** | ![Refresh](https://github.com/Gengj/Clear-TodoList-iOS/blob/master/Gif/pullToAdd.gif) |
+| **Pinch To Add** | ![Refresh](https://github.com/Gengj/Clear-TodoList-iOS/blob/master/Gif/pinchToAdd.gif) |
 
 
 Requirements
@@ -47,8 +52,13 @@ Clear-TodoList-iOS模仿了[iOS TODOList App Clear](http://www.realmacsoftware.c
 
 演示项目
 ==============
-查看并运行 `Clear.xcodeproj`
-Gif图片随后上传
+| 效果  | 预览图 |
+|-------|-------|
+| **右滑完成** | ![Zoom](https://github.com/Gengj/Clear-TodoList-iOS/blob/master/Gif/complete.gif) | 
+| **左滑删除** | ![Refresh](https://github.com/Gengj/Clear-TodoList-iOS/blob/master/Gif/delete.gif) |
+| **长按移动** | ![Refresh](https://github.com/Gengj/Clear-TodoList-iOS/blob/master/Gif/move.gif) |
+| **下拉添加** | ![Refresh](https://github.com/Gengj/Clear-TodoList-iOS/blob/master/Gif/pullToAdd.gif) |
+| **捏合添加** | ![Refresh](https://github.com/Gengj/Clear-TodoList-iOS/blob/master/Gif/pinchToAdd.gif) |
 
 系统要求
 ==============
